@@ -1,25 +1,19 @@
-import { getCollectionProducts } from '@/lib/shopify';
-
-export default async function Carousel() {
-  const products = await getCollectionProducts({ collection: 'test' });
-
-  if (!products?.length) return null;
-
+import Carousel from '@/components/carousel/product';
+import { getCollectionProducts, getCollections } from '@/lib/shopify';
+export default async function Home() {
+  const collections = await getCollections()
+  const twoCollections = collections.slice(0, 2);
 
   return (
-    <div>
-      {products.length}
-      <ul>
-        {products.map((product, i) => (
-          <li
-            key={`${product.handle}${i}`}
-          >
-            <div>
-              {product.title}
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className=' '>
+      hello {twoCollections.length}
+      {twoCollections.map((co, i) => (
+        <div key={i}>
+          <Carousel collection={co}/>
+        </div>
+      ))}
+     
+      
     </div>
   );
 }

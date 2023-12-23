@@ -1,3 +1,4 @@
+import { collectionFragment } from "../fragments/collection";
 import productFragment from "../fragments/product";
 
 export const getCollectionProductsQuery = /* GraphQL */ `
@@ -17,4 +18,17 @@ export const getCollectionProductsQuery = /* GraphQL */ `
     }
   }
   ${productFragment}
+`;
+
+export const getCollectionsQuery = /* GraphQL */ `
+  query getCollections {
+    collections(first: 100, sortKey: TITLE) {
+      edges {
+        node {
+          ...collection
+        }
+      }
+    }
+  }
+  ${collectionFragment}
 `;

@@ -1,8 +1,8 @@
 import { SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartsWith } from "../utils";
-import { getCollectionProductsQuery } from "./queries/collection";
-import { Connection, ShopifyCollectionProductsOperation, ShopifyProduct } from "./types";
+import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
+import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct } from "./types";
 
 const removeEdgesAndNodes = (array: Connection<any>) => {
   return array.edges.map((edge) => edge?.node);
@@ -98,3 +98,11 @@ export async function getCollectionProducts({
   return removeEdgesAndNodes(res.body.data.collection.products);
 }
 
+export async function getCollections(): Promise<Collection[]> {
+  const res = await shopifyFetch<ShopifyCollectionsOperation>({
+    query: getCollectionsQuery,
+    tags: [TAGS.collections]
+  });
+  const collections = removeEdgesAndNodes(res.body?.data?.collections);
+  return collections
+}

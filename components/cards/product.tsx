@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import { Eye } from "lucide-react";
-import { ShopifyProduct } from "@/lib/shopify/types";
+import { Product, ShopifyProduct } from "@/lib/shopify/types";
 import { formatPrice } from "@/lib/format-price";
 
-export async function ProductCard({product}: {product: ShopifyProduct}) {
+export async function ProductCard({product}: {product: Product}) {
   const amount = product.priceRange.maxVariantPrice.amount
   const currencyCode = product.priceRange.maxVariantPrice.currencyCode
   return (

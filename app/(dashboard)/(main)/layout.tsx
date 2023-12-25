@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { MainNav } from "@/components/layout/main-nav";
+import { MainNav } from "@/components/layout/nav/main-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { buttonVariants } from "@/components/ui/button";
 import { dashboardConfig } from "@/config/dashboard";

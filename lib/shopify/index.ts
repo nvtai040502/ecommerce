@@ -1,9 +1,10 @@
+import { NextRequest, NextResponse } from "next/server";
 import { SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartsWith } from "../utils";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
-import { getProductsQuery } from "./queries/product";
-import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation } from "./types";
+import { getProductQuery, getProductRecommendationsQuery, getProductsQuery } from "./queries/product";
+import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation } from "./types";
 
 const removeEdgesAndNodes = (array: Connection<any>) => {
   return array.edges.map((edge) => edge?.node);
@@ -96,7 +97,7 @@ export async function getCollectionProducts({
     return [];
   }
 
-  return removeEdgesAndNodes(res.body.data.collection.products);
+  return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
 }
 
 export async function getCollections(): Promise<Collection[]> {
@@ -104,8 +105,8 @@ export async function getCollections(): Promise<Collection[]> {
     query: getCollectionsQuery,
     tags: [TAGS.collections]
   });
-  const collections = removeEdgesAndNodes(res.body?.data?.collections);
-  return collections
+  const shopifyCollections = removeEdgesAndNodes(res.body?.data?.collections);
+  return shopifyCollections;
 }
 
 export async function getProducts({
@@ -129,3 +130,69 @@ export async function getProducts({
 
   return removeEdgesAndNodes(res.body.data.products);
 }
+
+export async function getProduct(handle: string): Promise<Product | undefined> {
+  const res = await shopifyFetch<ShopifyProductOperation>({
+    query: getProductQuery,
+    tags: [TAGS.products],
+    variables: {
+      handle
+    }
+  });
+
+  return reshapeProduct(res.body.data.product)
+}
+
+const reshapeProduct = (product: ShopifyProduct) => {
+  if (!product) {
+    return undefined;
+  }
+
+  const { images, variants, ...rest } = product;
+
+  return {
+    ...rest,
+    images: reshapeImages(images, product.title),
+    variants: removeEdgesAndNodes(variants)
+  };
+};
+const reshapeImages = (images: Connection<Image>, productTitle: string) => {
+  const flattened = removeEdgesAndNodes(images);
+
+  return flattened.map((image) => {
+    const filename = image.url.match(/.*\/(.*)\..*/)[1];
+    return {
+      ...image,
+      altText: image.altText || `${productTitle} - ${filename}`
+    };
+  });
+};
+
+export async function getProductRecommendations(productId: string): Promise<Product[]> {
+  const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
+    query: getProductRecommendationsQuery,
+    tags: [TAGS.products],
+    variables: {
+      productId
+    }
+  });
+
+  return reshapeProducts(res.body.data.productRecommendations);
+}
+
+const reshapeProducts = (products: ShopifyProduct[]) => {
+  const reshapedProducts = [];
+
+  for (const product of products) {
+    if (product) {
+      const reshapedProduct = reshapeProduct(product);
+
+      if (reshapedProduct) {
+        reshapedProducts.push(reshapedProduct);
+      }
+    }
+  }
+
+  return reshapedProducts;
+};
+

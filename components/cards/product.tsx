@@ -7,6 +7,7 @@ import { Button, buttonVariants } from "../ui/button";
 import { Eye } from "lucide-react";
 import { Product, ShopifyProduct } from "@/lib/shopify/types";
 import { formatPrice } from "@/lib/format-price";
+import Price from "../price";
 
 export async function ProductCard({product}: {product: Product}) {
   const amount = product.priceRange.maxVariantPrice.amount
@@ -30,7 +31,7 @@ export async function ProductCard({product}: {product: Product}) {
         <CardContent className="space-y-1.5 p-4 ">
           <CardTitle className="line-clamp-1">{product.title}</CardTitle>
           <CardDescription className="line-clamp-1">
-            {formatPrice(amount, currencyCode)}
+            <Price amount={amount} currencyCode={currencyCode} />
           </CardDescription>
         </CardContent>
       </Link>

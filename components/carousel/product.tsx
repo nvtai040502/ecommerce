@@ -1,3 +1,4 @@
+"use client"
 import {
   Carousel as CarouselShadcn,
   CarouselContent,
@@ -7,10 +8,9 @@ import {
 } from "@/components/ui/carousel"
 import { getCollectionProducts } from "@/lib/shopify";
 import { cn } from "@/lib/utils";
-import { Collection } from "@/lib/shopify/types";
+import { Collection, Product } from "@/lib/shopify/types";
 import { ProductCard } from "../cards/product";
-const ProductCarousel = async ({collection}: {collection: Collection}) => {
-  const products = await getCollectionProducts({ collection: collection.handle });
+const ProductCarousel = ({products}: {products: Product[]}) => {
   if (!products?.length) return null;
   return ( 
     <CarouselShadcn className="w-full lg:max-w-4xl xl:max-w-6xl md:max-w-2xl max-w-xs">

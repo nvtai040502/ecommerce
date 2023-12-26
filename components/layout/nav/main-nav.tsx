@@ -9,6 +9,7 @@ import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { MobileNav } from "./mobile-nav"
+import Cart from "@/components/cart"
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -56,6 +57,7 @@ export function MainNav({ items, children }: MainNavProps) {
       {showMobileMenu && items && (
         <MobileNav items={items}>{children}</MobileNav>
       )}
+      
     </div>
   )
 }

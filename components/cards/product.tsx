@@ -1,3 +1,4 @@
+"use client"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { AspectRatio } from "../ui/aspect-ratio";
 import Image from "next/image";
@@ -9,7 +10,19 @@ import { Product, ShopifyProduct } from "@/lib/shopify/types";
 import { formatPrice } from "@/lib/format-price";
 import Price from "../price";
 
-export async function ProductCard({product}: {product: Product}) {
+import { useState, useEffect } from 'react'
+ 
+  
+
+export function ProductCard({product}: {product: Product}) {
+  const [isClick, setIsClick] = useState(false)
+ 
+  useEffect(() => {
+    setIsClick(true)
+  }, [])
+
+  if (!isClick) return null
+
   const amount = product.priceRange.maxVariantPrice.amount
   const currencyCode = product.priceRange.maxVariantPrice.currencyCode
   return (

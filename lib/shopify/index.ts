@@ -4,7 +4,8 @@ import { isShopifyError } from "../type-guards";
 import { ensureStartsWith } from "../utils";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
 import { getProductQuery, getProductRecommendationsQuery, getProductsQuery } from "./queries/product";
-import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation } from "./types";
+import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation, Cart, ShopifyCreateCartOperation, ShopifyCart, ShopifyAddToCartOperation, ShopifyRemoveFromCartOperation, ShopifyUpdateCartOperation, ShopifyCartOperation } from "./types";
+import { getCartQuery } from "./queries/cart";
 
 const removeEdgesAndNodes = (array: Connection<any>) => {
   return array.edges.map((edge) => edge?.node);

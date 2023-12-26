@@ -51,7 +51,7 @@ async function RelatedProducts({ id }: { id: string }) {
     <div className="py-8">
       <h2 className="mb-4 text-2xl font-bold">You may alo like</h2>
 
-      {/* <ProductCarousel products={relatedProducts} /> */}
+      <ProductCarousel products={relatedProducts} />
       
     </div>
   );

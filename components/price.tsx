@@ -1,5 +1,4 @@
-import { formatPrice } from "@/lib/format-price";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 const Price = ({
   amount,

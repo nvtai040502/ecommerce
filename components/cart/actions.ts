@@ -3,7 +3,7 @@
 import getCurrentUser from '@/lib/auth/getCurrentUser';
 import { TAGS } from '@/lib/constants';
 import { db } from '@/lib/db';
-import { addToCart, createCart, getCart } from '@/lib/shopify';
+import { addToCart, createCart, getCart, removeFromCart, updateCart } from '@/lib/shopify';
 import { revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -44,5 +44,65 @@ export async function addItem({selectedVariantId, quantity} : {selectedVariantId
     revalidateTag(TAGS.cart);
   } catch (e) {
     return 'Error adding item to cart';
+  }
+}
+
+export async function deleteCartItem({lineId}: {lineId: string}) {
+  const user = await getCurrentUser()
+  if (!user) {
+    return redirect("/sign-in")
+  }
+  const cartDB = await db.cart.findUnique({
+      where: {
+        userId: user.id
+      }
+    });
+
+  if (!cartDB || !cartDB.shopifyCartId) {
+    return 'Missing shopifyCartId cart ID';
+  }
+
+  try {
+    await removeFromCart(cartDB.shopifyCartId, [lineId]);
+    revalidateTag(TAGS.cart);
+  } catch (e) {
+    return 'Error removing item from cart';
+  }
+}
+
+export async function updateItemQuantity(
+  payload: {
+    lineId: string;
+    variantId: string;
+    quantity: number;
+  }
+) {
+  const user = await getCurrentUser()
+  if (!user) {
+    return redirect("/sign-in")
+  }
+  const cartDB = await db.cart.findUnique({
+      where: {
+        userId: user.id
+      }
+    });
+
+  if (!cartDB || !cartDB.shopifyCartId) {
+    return 'Missing shopifyCartId cart ID';
+  }
+
+  const { lineId, variantId, quantity } = payload;
+
+  try {
+    await updateCart(cartDB.shopifyCartId, [
+      {
+        id: lineId,
+        merchandiseId: variantId,
+        quantity
+      }
+    ]);
+    revalidateTag(TAGS.cart);
+  } catch (e) {
+    return 'Error updating item quantity';
   }
 }

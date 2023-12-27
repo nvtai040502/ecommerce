@@ -3,6 +3,7 @@ import { AddToCart } from '../cart/add-to-cart';
 import Price from '../price';
 import Prose from '../prose';
 import { Product } from '@/lib/shopify/types';
+import { AddToCartForm } from '../forms/add-to-cart-form';
 
 export function ProductDescription({ product }: { product: Product }) {
   // console.log(product.options)
@@ -28,7 +29,7 @@ export function ProductDescription({ product }: { product: Product }) {
         />
       ) : null}
 
-      <AddToCart variants={product.variants} availableForSale={product.availableForSale} />
+      <AddToCartForm variants={product.variants} availableForSale={product.availableForSale} showQuality={true}/>
     </>
   );
 }

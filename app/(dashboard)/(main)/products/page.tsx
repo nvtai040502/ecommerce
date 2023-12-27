@@ -2,7 +2,7 @@ import Grid from "@/components/grid";
 import ProductGridItems from "@/components/layout/product-grid-items";
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/page-header";
 import { Shell } from "@/components/shells/shell";
-import { getProducts } from "@/lib/shopify";
+import { getCollectionProducts, getProducts } from "@/lib/shopify";
 
 const ProductsPage = async ({
   searchParams
@@ -10,7 +10,7 @@ const ProductsPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const { q: searchValue } = searchParams as { [key: string]: string };
-  const products = await getProducts({ query: searchValue });
+  const products = await getCollectionProducts({ collection: "both" });
   const resultsText = products.length > 1 ? 'results' : 'result';
   return ( 
     <Shell>

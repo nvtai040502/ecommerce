@@ -18,7 +18,6 @@ export function CartLineItems({
   items,
   isScrollable = true,
   isEditable = true,
-  variant = "default",
   className,
   ...props
 }: CartLineItemsProps) {
@@ -38,73 +37,40 @@ export function CartLineItems({
           <div key={item.id} className="space-y-3">
             <div
               className={cn(
-                "flex items-start justify-between gap-4",
-                isEditable && "flex-col xs:flex-row"
+                "flex items-start justify-between gap-4 flex-col xs:flex-row",
               )}
             >
               <div className="flex items-center space-x-4">
-                {variant === "default" ? (
-                  <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
-                    {/* {item.merchandise.length ? (
-                      <Image
-                        src={
-                          item.images[0]?.url ??
-                          "/images/product-placeholder.webp"
-                        }
-                        alt={item.images[0]?.name ?? item.name}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        fill
-                        className="absolute object-cover"
-                        loading="lazy"
-                      />
-                    ) : ( */}
-                      <div className="flex h-full items-center justify-center bg-secondary">
-                        "placeholder"
-                      </div>
-                    
-                  </div>
-                ) : null}
+                <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
+                  <Image
+                    className="h-full w-full object-cover"
+                    width={64}
+                    height={64}
+                    alt={
+                      item.merchandise.product.featuredImage.altText ||
+                      item.merchandise.product.title
+                    }
+                    src={item.merchandise.product.featuredImage.url}
+                  />
+                  
+                </div>
                 <div className="flex flex-col space-y-1 self-start">
                   <span className="line-clamp-1 text-sm font-medium">
-                    {item.id}
+                    {item.merchandise.product.title}
                   </span>
-                  {isEditable ? (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
-                      {(item.cost.totalAmount.amount)} x {item.quantity} ={" "}
-                      {(
-                        (Number(item.cost.totalAmount.amount) * Number(item.quantity)).toFixed(2)
-                      )}
-                    </span>
-                  ) : (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
-                      Qty {item.quantity}
-                    </span>
-                  )}
-                  {variant === "default" ? (
-                    <span className="line-clamp-1 text-xs capitalize text-muted-foreground">
-                      {`${item.category} ${
-                        item.subcategory ? `/ ${item.subcategory}` : ""
-                      }`}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-              {isEditable ? (
-                <UpdateCart cartLineItem={item} />
-              ) : (
-                <div className="flex flex-col space-y-1 font-medium">
-                  <span className="ml-auto line-clamp-1 text-sm">
-                    {formatPrice(
-                      (Number(item.price) * item.quantity).toFixed(2)
+                  
+                  <span className="line-clamp-1 text-xs text-muted-foreground">
+                    {(item.cost.totalAmount.amount)} x {item.quantity} ={" "}
+                    {(
+                      (Number(item.cost.totalAmount.amount) * Number(item.quantity)).toFixed(2)
                     )}
                   </span>
-                  <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {formatPrice(item.price)} each
-                  </span>
+                
                 </div>
-              )}
+              </div>
+              
             </div>
-            {variant === "default" ? <Separator /> : null}
+              <Separator />
           </div>
         ))}
       </div>

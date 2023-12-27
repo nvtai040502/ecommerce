@@ -12,7 +12,40 @@ export const config: NextAuthConfig = {
   session: {
     strategy: "jwt",
   },
-  
+  callbacks: {
+    
+    async session({ token, session }) {
+      if (token) {
+        session.user = {
+          id: token.id as string,
+          name: token.name,
+          email: token.email,
+          image: token.picture,
+        };
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: token.email,
+        },
+      })
+
+      if (!dbUser) {
+        if (user) {
+          token.id = user.id
+        }
+        return token
+      }
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        picture: dbUser.image,
+      }
+    },
+  },
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

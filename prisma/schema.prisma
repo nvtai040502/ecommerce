@@ -37,6 +37,13 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])
 }
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
 
 model User {
   id            String    @id @default(cuid())
@@ -46,12 +53,16 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+
+  cart Cart?
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+model Cart {
+  id            String    @id @default(cuid())
+  shopifyCartId String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  userId String  @unique
+  user   User @relation(fields: [userId], references: [id])
 }

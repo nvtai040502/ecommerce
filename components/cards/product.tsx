@@ -7,10 +7,10 @@ import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import { Eye } from "lucide-react";
 import { Product, ShopifyProduct } from "@/lib/shopify/types";
-import { formatPrice } from "@/lib/format-price";
 import Price from "../price";
 
 import { useState, useEffect } from 'react'
+import { AddToCartForm } from "../forms/add-to-cart-form";
  
   
 
@@ -50,13 +50,7 @@ export function ProductCard({product}: {product: Product}) {
       </Link>
       <CardFooter className="p-4 pt-1">
         <div className="flex w-full items-center space-x-2">
-          <Button
-            aria-label="Add to cart"
-            size="sm"
-            className="h-8 w-full rounded-sm"
-          >
-            Add to cart
-          </Button>
+          <AddToCartForm variants={product.variants} availableForSale={product.availableForSale} showQuality={false}/>
           <Link
             href={`/preview/product/${product.id}`}
             title="Preview"

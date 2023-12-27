@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link"
 
 import { cn, formatPrice } from "@/lib/utils"
@@ -15,17 +16,12 @@ import {
 import { Icons } from "@/components/icons"
 import { Cart } from "@/lib/shopify/types"
 import { CartLineItems } from "./line-items"
+import { useEffect, useRef, useState } from "react"
+import Price from "../price"
 
-export async function CartSheet({cart}: {cart: Cart}) {
-  const itemCount = cart.lines.reduce(
-    (total, item) => total + Number(item.quantity),
-    0
-  )
-
-  const cartTotal = cart.lines.reduce(
-    (total, item) => total + item.quantity * Number(item.cost),
-    0
-  )
+export function CartModal({cart}: {cart: Cart | undefined}) {
+  
+  const itemCount = cart?.lines.length || 0
 
   return (
     <Sheet>
@@ -44,15 +40,15 @@ export async function CartSheet({cart}: {cart: Cart}) {
               {itemCount}
             </Badge>
           )}
-          <Icons.cart className="h-4 w-4" aria-hidden="true" />
+          <Icons.cart className="h-5 w-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
         <SheetHeader className="space-y-2.5 pr-6">
-          <SheetTitle>Cart {itemCount > 0 && `(${itemCount})`}</SheetTitle>
+          <SheetTitle>Cart {itemCount} </SheetTitle>
           <Separator />
         </SheetHeader>
-        {itemCount > 0 ? (
+        {(cart && itemCount > 0) ? (
           <>
             <CartLineItems items={cart.lines} className="flex-1" />
             <div className="space-y-4 pr-6">
@@ -68,7 +64,10 @@ export async function CartSheet({cart}: {cart: Cart}) {
                 </div>
                 <div className="flex">
                   <span className="flex-1">Total</span>
-                  <span>{(cartTotal.toFixed(2))}</span>
+                  <Price
+                    amount={cart.cost.totalAmount.amount}
+                    currencyCode={cart.cost.totalAmount.currencyCode}
+                  />
                 </div>
               </div>
               <SheetFooter>

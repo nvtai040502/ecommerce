@@ -8,17 +8,19 @@ import { Gallery } from '@/components/product/gallery';
 import { ProductDescription } from '@/components/product/product-description';
 import Image from 'next/image';
 import ProductCarousel from '@/components/carousel/product';
+import getCurrentUser from '@/lib/auth/getCurrentUser';
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
 
+  const user = await getCurrentUser()
   
 
   return (
     <>
-     
+     {user?.id}
       <div className="mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 dark:border-neutral-800 dark:bg-black md:p-12 lg:flex-row lg:gap-8">
           <div className="h-full w-full basis-full lg:basis-4/6">

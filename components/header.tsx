@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { getGitHubStars } from "@/lib/getGithubStars";
+import { getGitHubStars } from "@/lib/actions/getGithubStars";
 import Link from "next/link";
 import { Icons } from "./icons";
 

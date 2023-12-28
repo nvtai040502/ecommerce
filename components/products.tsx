@@ -28,7 +28,9 @@ export function Products({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = React.useTransition()
+  
   const sort = searchParams.get("sort")
+  
 
   return (
     <section className="flex flex-col space-y-6">
@@ -49,14 +51,13 @@ export function Products({
                 className={cn(item.slug === sort && "bg-accent font-bold")}
                 onClick={() => {
                   startTransition(() => {
-                    router.push(
-                      createUrl(
-                        pathname,
-                        new URLSearchParams({
-                          ...(item.slug && item.slug.length && { sort: item.slug })
-                        })
-                      )
-                    )
+                    const newSearchParams = new URLSearchParams(searchParams);
+                    if (item.slug) {
+                      newSearchParams.set('sort', item.slug);
+                    } else {
+                      newSearchParams.delete('sort');
+                    }
+                    router.push(createUrl(pathname, newSearchParams));
                   })
                 }}
               >
@@ -72,6 +73,7 @@ export function Products({
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+     
       
     </section>
   )

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
+import { PRODUCT_PER_PAGE, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartsWith } from "../utils";
 import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
 import { getProductQuery, getProductRecommendationsQuery, getProductsQuery } from "./queries/product";
-import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation, Cart, ShopifyCreateCartOperation, ShopifyCart, ShopifyAddToCartOperation, ShopifyRemoveFromCartOperation, ShopifyUpdateCartOperation, ShopifyCartOperation } from "./types";
+import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation, Cart, ShopifyCreateCartOperation, ShopifyCart, ShopifyAddToCartOperation, ShopifyRemoveFromCartOperation, ShopifyUpdateCartOperation, ShopifyCartOperation, PageInfo } from "./types";
 import { getCartQuery } from "./queries/cart";
 import { addToCartMutation, createCartMutation, editCartItemsMutation, removeFromCartMutation } from "./mutations/cart";
 
@@ -114,11 +114,13 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getProducts({
   query,
   reverse,
-  sortKey
+  sortKey,
+  after, 
 }: {
   query?: string;
   reverse?: boolean;
   sortKey?: string;
+  after?: string;
 }): Promise<Product[]> {
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,
@@ -126,11 +128,41 @@ export async function getProducts({
     variables: {
       query,
       reverse,
-      sortKey
-    }
+      sortKey,
+      after, 
+      first: PRODUCT_PER_PAGE
+    },
   });
 
   return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+}
+
+export async function getPageInfo({
+  query,
+  reverse,
+  sortKey,
+  after, 
+}: {
+  query?: string;
+  reverse?: boolean;
+  sortKey?: string;
+  after?: string;
+}): Promise<PageInfo> {
+  const res = await shopifyFetch<ShopifyProductsOperation>({
+    query: getProductsQuery,
+    tags: [TAGS.products],
+    variables: {
+      query,
+      reverse,
+      sortKey,
+      after, 
+      first: PRODUCT_PER_PAGE
+    },
+  });
+
+  const pageInfo = res.body.data.products.pageInfo;
+
+  return pageInfo ;
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {

@@ -253,13 +253,23 @@ export type ShopifyProductRecommendationsOperation = {
   };
 };
 
+export type PageInfo = {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string;
+  endCursor: string;
+}
+
 export type ShopifyProductsOperation = {
   data: {
-    products: Connection<ShopifyProduct>;
+    products: Connection<ShopifyProduct> & { pageInfo: PageInfo }
+    
   };
   variables: {
     query?: string;
     reverse?: boolean;
     sortKey?: string;
+    after?: string,
+    first?: number
   };
 };

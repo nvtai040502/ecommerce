@@ -27,3 +27,5 @@ export const sorting: SortFilterItem[] = [
   { title: 'Price: Low to high', slug: 'price-asc', sortKey: 'PRICE', reverse: false }, // asc
   { title: 'Price: High to low', slug: 'price-desc', sortKey: 'PRICE', reverse: true }
 ];
+
+export const PRODUCT_PER_PAGE = 5

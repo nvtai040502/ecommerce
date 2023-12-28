@@ -1,17 +1,28 @@
-import Grid from "@/components/grid";
-import ProductGridItems from "@/components/layout/product-grid-items";
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/page-header";
+import { Products } from "@/components/products";
 import { Shell } from "@/components/shells/shell";
-import { getCollectionProducts, getProducts } from "@/lib/shopify";
+import { defaultSort, sorting } from "@/lib/constants";
+import { getProducts } from "@/lib/shopify";
+
+interface ProductsPageProps {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
+
+export const metadata = {
+  title: "Products",
+  description: "Buy products from our store",
+}
 
 const ProductsPage = async ({
   searchParams
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) => {
-  const { q: searchValue } = searchParams as { [key: string]: string };
-  const products = await getCollectionProducts({ collection: "both" });
-  const resultsText = products.length > 1 ? 'results' : 'result';
+}: ProductsPageProps) => {
+
+  
+  const { sort } = searchParams as { [key: string]: string };
+  const { sortKey, reverse } = sorting.find((item) => item.slug === sort) || defaultSort;
+  const products = await getProducts({sortKey, reverse});
   return ( 
     <Shell>
       <PageHeader>
@@ -20,18 +31,12 @@ const ProductsPage = async ({
           Buy products
         </PageHeaderDescription>
       </PageHeader>
-      {searchValue ? (
-        <p className="mb-4">
-          {products.length === 0
-            ? 'There are no products that match '
-            : `Showing ${products.length} ${resultsText} for `}
-          <span className="font-bold">&quot;{searchValue}&quot;</span>
-        </p>
-      ) : null}
+      
       {products.length > 0 ? (
-        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <ProductGridItems products={products} />
-        </Grid>
+
+        <Products products={products} />
+
+        
       ) : null}
     </Shell>
    );

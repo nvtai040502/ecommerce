@@ -130,7 +130,7 @@ export async function getProducts({
     }
   });
 
-  return removeEdgesAndNodes(res.body.data.products);
+  return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {

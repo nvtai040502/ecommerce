@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { PRODUCT_PER_PAGE, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "../constants";
 import { isShopifyError } from "../type-guards";
 import { ensureStartsWith } from "../utils";
-import { getCollectionProductsQuery, getCollectionsQuery } from "./queries/collection";
+import { getCollectionProductsQuery, getCollectionQuery, getCollectionsQuery } from "./queries/collection";
 import { getProductQuery, getProductRecommendationsQuery, getProductsQuery } from "./queries/product";
-import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation, Cart, ShopifyCreateCartOperation, ShopifyCart, ShopifyAddToCartOperation, ShopifyRemoveFromCartOperation, ShopifyUpdateCartOperation, ShopifyCartOperation, PageInfo } from "./types";
+import { Collection, Connection, ShopifyCollectionProductsOperation, ShopifyCollectionsOperation, Product, ShopifyProduct, ShopifyProductsOperation, ShopifyProductOperation, Image, ShopifyProductRecommendationsOperation, Cart, ShopifyCreateCartOperation, ShopifyCart, ShopifyAddToCartOperation, ShopifyRemoveFromCartOperation, ShopifyUpdateCartOperation, ShopifyCartOperation, PageInfo, ShopifyCollectionOperation, ShopifyCollection } from "./types";
 import { getCartQuery } from "./queries/cart";
 import { addToCartMutation, createCartMutation, editCartItemsMutation, removeFromCartMutation } from "./mutations/cart";
 
@@ -122,6 +122,27 @@ export async function getCollections(): Promise<Collection[]> {
   const shopifyCollections = removeEdgesAndNodes(res.body?.data?.collections);
   return shopifyCollections;
 }
+
+export async function getCollection({handle}:{handle: string}): Promise<Collection | undefined> {
+  const res = await shopifyFetch<ShopifyCollectionOperation>({
+    query: getCollectionQuery,
+    tags: [TAGS.collections],
+    variables: {
+      handle
+    }
+  });
+
+  return reshapeCollection(res.body.data.collection);
+}
+const reshapeCollection = (collection: ShopifyCollection): Collection | undefined => {
+  if (!collection) {
+    return undefined;
+  }
+
+  return {
+    ...collection,
+  };
+};
 
 export async function getProducts({
   query,

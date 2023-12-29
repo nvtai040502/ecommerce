@@ -45,3 +45,12 @@ export const getCollectionsQuery = /* GraphQL */ `
   }
   ${collectionFragment}
 `;
+
+export const getCollectionQuery = /* GraphQL */ `
+  query getCollection($handle: String!) {
+    collection(handle: $handle) {
+      ...collection
+    }
+  }
+  ${collectionFragment}
+`;

@@ -29,10 +29,7 @@ export type CartItem = {
   };
 };
 
-export type Collection = ShopifyCollection & {
-  path: string;
-};
-
+export type Collection = ShopifyCollection
 export type Image = {
   url: string;
   altText: string;
@@ -106,6 +103,7 @@ export type ShopifyCollection = {
   description: string;
   seo: SEO;
   updatedAt: string;
+  image: Image
 };
 
 export type ShopifyProduct = {
@@ -274,4 +272,8 @@ export type ShopifyProductsOperation = {
     after?: string,
     first?: number
   };
+};
+
+export type CollectionWithProducts = Omit<Collection, "products"> & {
+  products: Product[];
 };

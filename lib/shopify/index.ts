@@ -128,11 +128,13 @@ export async function getProducts({
   reverse,
   sortKey,
   after, 
+  first = PRODUCT_PER_PAGE,
 }: {
   query?: string;
   reverse?: boolean;
   sortKey?: string;
   after?: string;
+  first?: number
 }): Promise<{
   products: Product[],
   pageInfo: PageInfo
@@ -145,7 +147,7 @@ export async function getProducts({
       reverse,
       sortKey,
       after, 
-      first: PRODUCT_PER_PAGE
+      first
     },
   });
 

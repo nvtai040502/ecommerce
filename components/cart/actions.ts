@@ -22,7 +22,7 @@ export async function addItem({selectedVariantId, quantity} : {selectedVariantId
     if (!cartDB) {
       const shopifyCart = await createCart();
       try {
-        const response = await fetch(process.env.URL + '/api/cart', {
+        const response = await fetch(process.env.NEXT_PUBLIC_APP_URL + '/api/cart', {
           method: 'POST', 
           headers: {
             'Content-Type': 'application/json' 

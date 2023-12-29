@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ReadonlyURLSearchParams } from 'next/navigation';
+import { z } from "zod";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,3 +30,12 @@ export const formatPrice = (price: string | number, currencyCode: string): strin
     currency: currencyCode
   }).format(parsedPrice);
 };
+
+
+export function isMacOs() {
+  if (typeof window === "undefined") return false
+
+  return window.navigator.userAgent.includes("Mac")
+}
+
+

@@ -196,13 +196,15 @@ export type ShopifyCollectionOperation = {
 export type ShopifyCollectionProductsOperation = {
   data: {
     collection: {
-      products: Connection<ShopifyProduct>;
+      products: Connection<ShopifyProduct> & {pageInfo: PageInfo};
     };
   };
   variables: {
     handle: string;
     reverse?: boolean;
     sortKey?: string;
+    first?: number;
+    after?: string;
   };
 };
 

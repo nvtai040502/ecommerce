@@ -11,16 +11,18 @@ interface PaginationButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   pageInfo: PageInfo
   page: string
   pageCount: number
+  nearest_pages?: number
 }
 
 export function PaginationButton({
   pageInfo,
   page,
   pageCount,
+  nearest_pages=3,
   className,
   ...props
 }: PaginationButtonProps) {
-  
+  console.log(pageInfo)
   const router = useRouter()
   const pathname = usePathname()
   const [isPending, startTransition] = React.useTransition()
@@ -41,7 +43,7 @@ export function PaginationButton({
   };
 
   // Get the nearest three pages around the current page
-  const nearestPages = getNearestPages(Number(page), 3);
+  const nearestPages = getNearestPages(Number(page), nearest_pages);
 
   return (
     <div

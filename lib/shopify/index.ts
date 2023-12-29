@@ -78,28 +78,40 @@ export async function shopifyFetch<T>({
 export async function getCollectionProducts({
   collection,
   reverse,
-  sortKey
+  sortKey,
+  first,
+  after
 }: {
   collection: string;
   reverse?: boolean;
   sortKey?: string;
-}): Promise<Product[]> {
+  first?: number;
+  after?: string;
+}): Promise<{
+  products: Product[],
+  pageInfo: PageInfo | null
+}> {
   const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
     query: getCollectionProductsQuery,
     tags: [TAGS.collections, TAGS.products],
     variables: {
       handle: collection,
       reverse,
-      sortKey: sortKey === 'CREATED_AT' ? 'CREATED' : sortKey
+      first,
+      sortKey,
+      after
     }
   });
 
   if (!res.body.data.collection) {
     console.log(`No collection found for \`${collection}\``);
-    return [];
+    return {products:[], pageInfo:null};
   }
 
-  return reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+  const products = reshapeProducts(removeEdgesAndNodes(res.body.data.collection.products));
+  const pageInfo = res.body.data.collection.products.pageInfo
+
+  return {products, pageInfo}
 }
 
 export async function getCollections(): Promise<Collection[]> {
@@ -121,7 +133,10 @@ export async function getProducts({
   reverse?: boolean;
   sortKey?: string;
   after?: string;
-}): Promise<Product[]> {
+}): Promise<{
+  products: Product[],
+  pageInfo: PageInfo
+}> {
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,
     tags: [TAGS.products],
@@ -134,35 +149,10 @@ export async function getProducts({
     },
   });
 
-  return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
-}
+  const products = reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+  const pageInfo = res.body.data.products.pageInfo 
 
-export async function getPageInfo({
-  query,
-  reverse,
-  sortKey,
-  after, 
-}: {
-  query?: string;
-  reverse?: boolean;
-  sortKey?: string;
-  after?: string;
-}): Promise<PageInfo> {
-  const res = await shopifyFetch<ShopifyProductsOperation>({
-    query: getProductsQuery,
-    tags: [TAGS.products],
-    variables: {
-      query,
-      reverse,
-      sortKey,
-      after, 
-      first: PRODUCT_PER_PAGE
-    },
-  });
-
-  const pageInfo = res.body.data.products.pageInfo;
-
-  return pageInfo ;
+  return {products, pageInfo}
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
@@ -176,6 +166,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 
   return reshapeProduct(res.body.data.product)
 }
+
 
 const reshapeProduct = (product: ShopifyProduct) => {
   if (!product) {

@@ -1,7 +1,20 @@
 import productFragment from '../fragments/product';
 export const getProductsQuery = /* GraphQL */ `
-  query getProducts($sortKey: ProductSortKeys, $reverse: Boolean, $query: String, $first: Int, $after: String) {
-    products(sortKey: $sortKey, reverse: $reverse, query: $query, first: $first, after: $after) {
+query getProducts(
+    $sortKey: ProductSortKeys, 
+    $reverse: Boolean, 
+    $query: String, 
+    $first: Int, 
+    $after: String
+    ) {
+    
+    products(
+      sortKey: $sortKey, 
+      reverse: $reverse, 
+      query: $query, 
+      first: $first, 
+      after: $after
+      ) {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -17,8 +30,6 @@ export const getProductsQuery = /* GraphQL */ `
   }
   ${productFragment}
 `;
-
-
 
 
 export const getProductQuery = /* GraphQL */ `

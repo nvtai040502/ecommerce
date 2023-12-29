@@ -13,7 +13,7 @@ export default async function Home() {
       {user?.email}
       <Header />
       {collections.map( async (collection, i) => {
-        const products = await getCollectionProducts({collection: collection.handle})
+        const {products} = await getCollectionProducts({collection: collection.handle, first: 100})
         return (
           <div key={i} className='p-4 mx-auto'>
             <ProductCarousel products={products} />

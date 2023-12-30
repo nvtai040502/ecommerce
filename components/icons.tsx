@@ -16,6 +16,7 @@ import {
   FileText,
   HelpCircle,
   Image,
+  ImageIcon,
   Laptop,
   LayoutDashboard,
   Loader2,
@@ -38,6 +39,7 @@ import {
 export const Icons = {
   logo: Command,
   dashboard: LayoutDashboard,
+  placeholder: ImageIcon,
   logout: LogOut,
   settings: Settings,
   search: Search,

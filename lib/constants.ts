@@ -6,6 +6,8 @@ export const TAGS = {
   cart: 'cart'
 };
 
+
+
 export type SortFilterItem = {
   title: string;
   slug: string | null;
@@ -29,3 +31,5 @@ export const sorting: SortFilterItem[] = [
 ];
 
 export const PRODUCT_PER_PAGE = 5
+export const POSTS_DIRECTORY = 'content/blog';
+export const AUTHORS_DIRECTORY = 'content/authors';

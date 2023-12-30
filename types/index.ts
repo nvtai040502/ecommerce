@@ -1,4 +1,9 @@
-import type { Icons } from "@/components/icons"
+export type Post = {
+  frontMatter: {
+    [key: string]: any;
+};
+  slug: string;
+}
 
 export type DashboardConfig = {
   mainNav: MainNavItem[]

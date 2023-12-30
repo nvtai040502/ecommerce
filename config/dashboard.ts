@@ -9,11 +9,12 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: "About",
       href: "/about",
+      disabled: true
     },
     {
       title: "Blog",
       href: "/blog",
-      disabled: true
+      disabled: false
     }
   ],
 }

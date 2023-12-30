@@ -13,8 +13,11 @@ import { useState, useEffect } from 'react'
 import { AddToCartForm } from "../forms/add-to-cart-form";
  
   
-
-export function ProductCard({product}: {product: Product}) {
+interface ProductCardProps {
+  product: Product
+  collectionTitle?: string
+}
+export function ProductCard({product, collectionTitle}: ProductCardProps) {
   const [isClick, setIsClick] = useState(false)
  
   useEffect(() => {
@@ -43,6 +46,11 @@ export function ProductCard({product}: {product: Product}) {
         <span className="sr-only">{product.title}</span>
         <CardContent className="space-y-1.5 p-4 ">
           <CardTitle className="line-clamp-1">{product.title}</CardTitle>
+          {collectionTitle && (
+            <CardDescription className="line-clamp-1">
+              {collectionTitle}
+            </CardDescription>  
+          )}
           <CardDescription className="line-clamp-1">
             <Price amount={amount} currencyCode={currencyCode} />
           </CardDescription>
@@ -51,20 +59,6 @@ export function ProductCard({product}: {product: Product}) {
       <CardFooter className="p-4 pt-1">
         <div className="flex w-full items-center space-x-2">
           <AddToCartForm variants={product.variants} availableForSale={product.availableForSale} showQuality={false}/>
-          <Link
-            href={`/preview/product/${product.id}`}
-            title="Preview"
-            className={cn(
-              buttonVariants({
-                variant: "secondary",
-                size: "icon",
-                className: "h-8 w-8 shrink-0",
-              })
-            )}
-          >
-            <Eye className="h-4 w-4" aria-hidden="true" />
-            <span className="sr-only">Preview</span>
-          </Link>
         </div>
         
       </CardFooter>

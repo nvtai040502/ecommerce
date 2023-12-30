@@ -9,6 +9,17 @@ import { Separator } from '@/components/ui/separator';
 import { PostCard } from '@/components/cards/post';
 import { POSTS_DIRECTORY } from '@/lib/constants';
 import { getAllPosts } from '@/lib/actions/blog';
+import React from 'react';
+import { PostCardSkeleton } from '@/components/skeletons/post-card';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
+  title: "Blog",
+  description: "Explore the latest news and updates from the community",
+}
+
+
 const BlogPage = async () => {
   const posts = await getAllPosts()
 
@@ -22,9 +33,15 @@ const BlogPage = async () => {
       </PageHeader>
       <Separator className="mb-2.5" />
       <section className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post, i) => (
-          <PostCard key={post.slug} post={post} i={i} />
-        ))}
+        <React.Suspense
+            fallback={Array.from({ length: 4 }).map((_, i) => (
+              <PostCardSkeleton key={i} />
+            ))}
+          >
+          {posts.map((post, i) => (
+            <PostCard key={post.slug} post={post} i={i} />
+          ))}
+        </React.Suspense>
       </section>
     </Shell>
     

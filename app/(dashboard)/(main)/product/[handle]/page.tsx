@@ -9,18 +9,36 @@ import { ProductDescription } from '@/components/product/product-description';
 import Image from 'next/image';
 import ProductCarousel from '@/components/carousel/product';
 import getCurrentUser from '@/lib/auth/getCurrentUser';
+import { Metadata } from 'next';
+import { toTitleCase } from '@/lib/utils';
 
-export default async function ProductPage({ params }: { params: { handle: string } }) {
+
+interface ProductPageProps {
+  params: { handle: string}
+}
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
+  const product = await getProduct(params.handle);
+
+  if (!product) {
+    return {}
+  }
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
+    title: toTitleCase(product.title),
+    description: product.description,
+  }
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
 
-  const user = await getCurrentUser()
-  
-
   return (
     <>
-     {user?.id}
       <div className="mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 dark:border-neutral-800 dark:bg-black md:p-12 lg:flex-row lg:gap-8">
           <div className="h-full w-full basis-full lg:basis-4/6">

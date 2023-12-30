@@ -16,12 +16,18 @@ import {
 import { Icons } from "@/components/icons"
 import { Cart } from "@/lib/shopify/types"
 import { CartLineItems } from "./line-items"
-import { useEffect, useRef, useState } from "react"
 import Price from "../price"
+import { toast } from "sonner"
+import { deleteCartItem } from "./actions"
 
 export function CartModal({cart}: {cart: Cart | undefined}) {
   
   const itemCount = cart?.lines.length || 0
+
+  const handleCheckout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    // e.preventDefault();
+    toast("Checkout Success")
+  }
 
   return (
     <Sheet>
@@ -72,16 +78,9 @@ export function CartModal({cart}: {cart: Cart | undefined}) {
               </div>
               <SheetFooter>
                 <SheetTrigger asChild>
-                  <Link
-                    aria-label="View your cart"
-                    href="/cart"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "w-full",
-                    })}
-                  >
+                  <Button onClick={handleCheckout} className="w-full">
                     Continue to checkout
-                  </Link>
+                  </Button>
                 </SheetTrigger>
               </SheetFooter>
             </div>

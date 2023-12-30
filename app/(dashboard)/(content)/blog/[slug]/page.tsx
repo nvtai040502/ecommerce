@@ -1,17 +1,50 @@
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import Link from "next/link";
-import { cn, formatDate } from "@/lib/utils";
+import { absoluteUrl, cn, formatDate } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import Image from "next/image";
 import { getAllAuthors, getAllPosts } from "@/lib/actions/blog";
 import { notFound } from "next/navigation";
 import { authorSchema, frontMatterSchema } from "@/lib/validations/blog";
+import { Metadata } from 'next';
 
 interface BlogPostPageProps {
   params: {
     slug: string
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+
+  const posts = await getAllPosts();
+  const post = posts.find((post) => post.slug === params.slug);
+  if (!post) {
+    return {}
+  }
+
+  const frontMatter = frontMatterSchema.parse(post.frontMatter);
+
+  const url = process.env.NEXT_PUBLIC_APP_URL!
+
+  const ogUrl = new URL(`${url}/api/og`)
+  ogUrl.searchParams.set("title", frontMatter.title)
+  ogUrl.searchParams.set("type", "Blog Post")
+  ogUrl.searchParams.set("mode", "dark")
+
+  return {
+    metadataBase: new URL(url),
+    title: frontMatter.title,
+    description: frontMatter.description,
+    twitter: {
+      card: "summary_large_image",
+      title: frontMatter.title,
+      description: frontMatter.description,
+      images: [ogUrl.toString()],
+    },
   }
 }
 

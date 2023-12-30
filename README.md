@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Build an Ecommerce Website with Shopify ,Next.js 14, Prisma, MySQL, Shadcn/ui, NextAuth 
 
-## Getting Started
+### Prerequisites
 
-First, run the development server:
+**Node version 18.x.x**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Cloning the repository
+
+```shell
+git clone https://github.com/nvtai040502/ecommerce
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install packages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```shell
+npm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Setup .env file
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+```js
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=""
+SHOPIFY_STORE_DOMAIN=""
+GITHUB_ACCESS_TOKEN = ""
+SHOPIFY_REVALIDATION_SECRET=""
+DATABASE_URL=''
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+NEXTAUTH_SECRET=""
+GITHUB_CLIENT_ID=""
+GITHUB_CLIENT_SECRET=""
+NEXT_PUBLIC_APP_URL="http://localhost:3000/"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Setup Prisma
 
-## Deploy on Vercel
+Add Plannet Scale Database
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```shell
+npx prisma generate
+npx prisma db push
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+
+### Start the app
+
+```shell
+npm run dev
+```
